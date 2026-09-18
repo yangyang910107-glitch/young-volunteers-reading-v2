@@ -1,0 +1,168 @@
+{
+  "lead": {
+    "title": "WHAT CAN YOU CONTRIBUTE?",
+    "kind": "poll",
+    "note": "Discuss with your partner and give one reason. (90 seconds)",
+    "questions": [
+      {
+        "prompt": "You are about to join a volunteer team. What could you contribute MOST?",
+        "options": [
+          "Practical organization skills",
+          "Communication and media work",
+          "Care and patience",
+          "Leadership and teaching"
+        ]
+      }
+    ],
+    "support": [
+      "I chose ___ because…",
+      "I think ___ would be useful because…"
+    ]
+  },
+  "vocabMatch": {
+    "title": "WORDS & MEANINGS",
+    "kind": "choice",
+    "note": "Match each word with its meaning. Submit ONE set per group.",
+    "questions": [
+      {
+        "prompt": "persistently",
+        "options": [
+          "treat something as more important than something else",
+          "give time, effort or skill to help a shared purpose",
+          "use past experience or knowledge to help",
+          "repeatedly and with determination",
+          "think something is less important than it really is",
+          "unwilling or not eager to do something"
+        ]
+      },
+      {
+        "prompt": "reluctant",
+        "options": [
+          "treat something as more important than something else",
+          "give time, effort or skill to help a shared purpose",
+          "use past experience or knowledge to help",
+          "repeatedly and with determination",
+          "think something is less important than it really is",
+          "unwilling or not eager to do something"
+        ]
+      },
+      {
+        "prompt": "prioritize",
+        "options": [
+          "treat something as more important than something else",
+          "give time, effort or skill to help a shared purpose",
+          "use past experience or knowledge to help",
+          "repeatedly and with determination",
+          "think something is less important than it really is",
+          "unwilling or not eager to do something"
+        ]
+      },
+      {
+        "prompt": "contribute",
+        "options": [
+          "treat something as more important than something else",
+          "give time, effort or skill to help a shared purpose",
+          "use past experience or knowledge to help",
+          "repeatedly and with determination",
+          "think something is less important than it really is",
+          "unwilling or not eager to do something"
+        ]
+      },
+      {
+        "prompt": "underestimate",
+        "options": [
+          "treat something as more important than something else",
+          "give time, effort or skill to help a shared purpose",
+          "use past experience or knowledge to help",
+          "repeatedly and with determination",
+          "think something is less important than it really is",
+          "unwilling or not eager to do something"
+        ]
+      },
+      {
+        "prompt": "draw on",
+        "options": [
+          "treat something as more important than something else",
+          "give time, effort or skill to help a shared purpose",
+          "use past experience or knowledge to help",
+          "repeatedly and with determination",
+          "think something is less important than it really is",
+          "unwilling or not eager to do something"
+        ]
+      }
+    ]
+  },
+  "vocabUse": {
+    "title": "USE THE WORDS",
+    "kind": "choice",
+    "note": "Complete the six sentences together.",
+    "questions": [
+      {
+        "prompt": "Leo was __________ encouraged to join a clean-up.",
+        "options": [
+          "draw on",
+          "underestimated",
+          "persistently",
+          "contribute",
+          "reluctant",
+          "prioritize"
+        ]
+      },
+      {
+        "prompt": "He had previously been __________ to speak to a group.",
+        "options": [
+          "draw on",
+          "underestimated",
+          "persistently",
+          "contribute",
+          "reluctant",
+          "prioritize"
+        ]
+      },
+      {
+        "prompt": "Maya reduced her volunteering to __________ schoolwork.",
+        "options": [
+          "draw on",
+          "underestimated",
+          "persistently",
+          "contribute",
+          "reluctant",
+          "prioritize"
+        ]
+      },
+      {
+        "prompt": "Leo uses a free-time skill to __________ to the organization.",
+        "options": [
+          "draw on",
+          "underestimated",
+          "persistently",
+          "contribute",
+          "reluctant",
+          "prioritize"
+        ]
+      },
+      {
+        "prompt": "Oliver can __________ an earlier experience in his present role.",
+        "options": [
+          "draw on",
+          "underestimated",
+          "persistently",
+          "contribute",
+          "reluctant",
+          "prioritize"
+        ]
+      },
+      {
+        "prompt": "Sofia had initially __________ the value of charity-shop work.",
+        "options": [
+          "draw on",
+          "underestimated",
+          "persistently",
+          "contribute",
+          "reluctant",
+          "prioritize"
+        ]
+      }
+    ]
+  }
+}

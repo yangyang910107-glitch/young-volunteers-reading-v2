@@ -1,0 +1,25 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const {io}=require('socket.io-client'),{createApp}=require('../server');
+const {KEY_ANSWERS,WHO_ANSWERS,EVIDENCE}=require('../curriculum');
+const LESSON=require('../public/lesson-content');
+test('review goes directly to strategy summary then full exit matching, with key selection required and teacher-only publication',async t=>{
+ const app=createApp(),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(r=>app.io.close(r));});
+ const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(r=>c.once('connect',r));return c;};
+ const send=(c,e,p={})=>new Promise((r,j)=>c.timeout(3000).emit(e,p,(err,x)=>err?j(err):x.ok?r(x):j(Error(x.error))));
+ const teacher=await connect(),j=await send(teacher,'teacher:join',{code:'FOCUSEXIT'}),auth={code:'FOCUSEXIT',token:j.token};let s=j.state;
+ const student=await connect();await send(student,'student:join',{code:'FOCUSEXIT',clientId:'focus-student-identity',name:'Amy',group:1});
+ const peek=async()=>s=(await send(teacher,'teacher:join',auth)).state, current=()=>({stage:s.stage,round:s.round});
+ const next=async()=>{await send(teacher,'teacher:next',{...auth,...current()});await peek();};
+ while(s.stage!=='peer')await next();await send(teacher,'teacher:reveal',{...auth,...current()});await peek();assert.ok(s.accuracy.every(a=>a.reviewAnswer));
+ await next();assert.equal(s.stage,'summary');assert.equal(s.revealed,true);assert.equal(LESSON.summary.kind,'summary');await next();assert.equal(s.stage,'exit');assert.equal(s.exitReferences,undefined);
+ const answer=LESSON.exit.questions.map(({q})=>({who:WHO_ANSWERS[q],evidence:EVIDENCE[q]}));await send(student,'lesson:draft',{...current(),answer});await assert.rejects(send(student,'lesson:submit',current()));
+ answer.forEach((a,i)=>a.key=KEY_ANSWERS[LESSON.exit.questions[i].q]);
+ const wrong=structuredClone(answer);wrong[0].key=answer[1].key;
+ await send(student,'lesson:draft',{...current(),answer:wrong});await send(student,'lesson:submit',current());await peek();assert.equal(s.submitted,1);assert.equal(s.exitReferences,undefined);
+ await send(teacher,'teacher:reveal',{...auth,...current()});await peek();assert.equal(s.lessonRows[0].correct[0],false);assert.ok(s.lessonRows[0].correct.slice(1).every(Boolean));assert.equal(s.exitReferences.length,answer.length);
+ const record=(await send(student,'student:record')).record;assert.equal(record.groups[0].lessonAnswers.exit[0].key,wrong[0].key);assert.equal(record.lessonDefinitions.response,undefined);assert.equal(record.lessonDefinitions.homework,undefined);
+ await assert.rejects(send(teacher,'teacher:next',{...auth,...current()}));
+ await send(teacher,'teacher:previous',{...auth,...current()});await peek();assert.equal(s.stage,'summary');await next();assert.equal(s.stage,'exit');assert.equal(s.revealed,true);assert.equal(s.submitted,1);assert.deepEqual(s.lessonRows[0].answer,wrong);
+ while(s.stage!=='combined'){await send(teacher,'teacher:previous',{...auth,...current()});await peek();}await next();assert.equal(s.stage,'peer');assert.equal(s.revealed,true);
+ while(s.step>0){await send(teacher,'teacher:previous',{...auth,...current()});await peek();}await assert.rejects(send(teacher,'teacher:previous',{...auth,...current()}));
+});

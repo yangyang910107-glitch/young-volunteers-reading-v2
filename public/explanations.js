@@ -12,7 +12,7 @@ function keyComparison(rows,answers=null,markings=[]){
     card.append(question);
     const choices=answers?[{key:answers[a.q],group:null,submitted:true}]:(a.groupKeys||[]);
     const chosen=el('div',undefined,'chosen-key-ideas'+(answers?'':' class-key-ideas'));
-    choices.forEach(g=>{
+    choices.filter(g=>Number.isInteger(g.key)).forEach(g=>{
       const line=el('p',undefined,'chosen-key-idea');
       line.append(el('small',g.group?'GROUP '+g.group+(g.submitted?'':' · DRAFT'):'OUR KEY IDEA'));
       line.append(el('span',Number.isInteger(g.key)?keyLabel(g.key):'Not answered yet'));
@@ -41,7 +41,8 @@ answerTable=function(rows,keysOnly=false){
   const wrap=el('div',undefined,'bridge-answer-list');
   rows.forEach(a=>{
     const card=el('section',undefined,'bridge-result'),head=el('div',undefined,'bridge-question');
-    head.append(el('small','QUESTION '+TASK_LABELS[a.q].toUpperCase()+' · '+(a.total?a.percent+'% · '+a.correct+' / '+a.total+' correct':'NOT SUBMITTED')));
+    head.append(el('small','QUESTION '+TASK_LABELS[a.q].toUpperCase()+(state?.stage==='peer'?' · GROUP '+(a.q+1):'')));
+    if(state?.stage==='peer'){const chosen=el('section',undefined,'review-choice');chosen.append(el('strong',a.total&&a.correct===a.total?'✓ COMPLETE MATCH':'LET’S CHECK THIS MATCH'),el('p','Selected Who: '+personText(a.reviewAnswer?.who)),evidenceBlock(a.reviewAnswer?.evidence||[]));card.append(chosen);} 
     head.append(coloredText(QUESTIONS[a.q],a.reference.parts.map(t=>[t])));card.append(head);
     const key=el('div',undefined,'key-idea-pair');
     key.append(el('small','KEY IDEA'),coloredText(keyLabel(a.key,a.q>=6),a.reference.keyParts.map(t=>[t])));

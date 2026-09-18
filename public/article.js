@@ -35,17 +35,10 @@
     "id": "peer",
     "title": "CHECK & REVISE"
   },
-  {
-    "id": "response",
-    "title": "CHOOSE A VOLUNTEER ROLE"
-  },
+  {"id":"summary","title":"MATCH EVERY KEY IDEA"},
   {
     "id": "exit",
     "title": "EXIT TICKET · TEAM CHALLENGE"
-  },
-  {
-    "id": "homework",
-    "title": "TAKE THE STRATEGY WITH YOU"
   }
 ],PROFILES=[
   {
