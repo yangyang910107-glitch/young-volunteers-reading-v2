@@ -3,7 +3,7 @@ const {io}=require('socket.io-client'),{createApp}=require('../server');
 const {KEY_ANSWERS,WHO_ANSWERS,EVIDENCE}=require('../curriculum');
 const {findByName}=require('../participant-resume');
 test('closing a page then joining by the same name restores the original group and work at the current stage, including after exit reveal, without adding a student',async t=>{
-  const app=createApp(),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));
+  const app=createApp({started:true}),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));
   t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(r=>app.io.close(r));});
   const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(r=>c.once('connect',r));return c;};
   const send=(c,e,p={})=>new Promise((r,j)=>c.timeout(3000).emit(e,p,(err,x)=>err?j(err):x.ok?r(x):j(Error(e+': '+x.error))));
@@ -34,7 +34,7 @@ test('closing a page then joining by the same name restores the original group a
   const other=await connect();r=await send(other,'student:join',{code:'ANOTHERROOM',clientId:'name-other-room',name:'Amy Stone',group:1});assert.equal(r.resumed,false);assert.equal(r.personal.notes,'');assert.equal(r.group,1);assert.equal(different.created,true);
 });
 test('named guest return restores only their independent practice and never resumes a formal student of the same name',async t=>{
-  const app=createApp(),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));
+  const app=createApp({started:true}),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));
   t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(r=>app.io.close(r));});
   const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(r=>c.once('connect',r));return c;};
   const send=(c,e,p={})=>new Promise((r,j)=>c.timeout(3000).emit(e,p,(err,x)=>err?j(err):x.ok?r(x):j(Error(e+': '+x.error))));

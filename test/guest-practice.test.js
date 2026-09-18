@@ -5,7 +5,7 @@ const {KEY_ANSWERS,WHO_ANSWERS,EVIDENCE}=require('../curriculum');
 const LESSON=require('../public/lesson-content'),RULES=require('../lesson-rules');
 
 test('guest practice preserves personal work and published-only answers without changing class submissions, accuracy, feedback, votes or exports',async t=>{
-  const app=createApp(),clients=[];
+  const app=createApp({started:true}),clients=[];
   await new Promise(r=>app.server.listen(0,'127.0.0.1',r));
   t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(r=>app.io.close(r));});
   const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(r=>c.once('connect',r));return c;};
@@ -87,7 +87,7 @@ test('guest practice preserves personal work and published-only answers without 
 });
 
 test('late guest joins and practice-group switching start with independent drafts while legacy viewers remain read-only',async t=>{
-  const app=createApp(),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));
+  const app=createApp({started:true}),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));
   t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(r=>app.io.close(r));});
   const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(r=>c.once('connect',r));return c;};
   const send=(c,e,p={})=>new Promise((r,j)=>c.timeout(3000).emit(e,p,(err,x)=>err?j(err):r(x)));

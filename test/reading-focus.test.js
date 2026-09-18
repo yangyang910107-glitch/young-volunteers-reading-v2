@@ -3,7 +3,7 @@ const {io}=require('socket.io-client'),{createApp}=require('../server');
 const {KEY_ANSWERS,WHO_ANSWERS,EVIDENCE}=require('../curriculum');
 const LESSON=require('../public/lesson-content');
 test('review goes directly to strategy summary then full exit matching, with key selection required and teacher-only publication',async t=>{
- const app=createApp(),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(r=>app.io.close(r));});
+ const app=createApp({started:true}),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(r=>app.io.close(r));});
  const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(r=>c.once('connect',r));return c;};
  const send=(c,e,p={})=>new Promise((r,j)=>c.timeout(3000).emit(e,p,(err,x)=>err?j(err):x.ok?r(x):j(Error(x.error))));
  const teacher=await connect(),j=await send(teacher,'teacher:join',{code:'FOCUSEXIT'}),auth={code:'FOCUSEXIT',token:j.token};let s=j.state;
