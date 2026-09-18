@@ -200,7 +200,7 @@ module.exports=[
       "discovering"
     ],
     "keyParts": [
-      "didn’t want the job",
+      "didn't want",
       "thought it helped little",
       "finds it useful"
     ],
@@ -218,7 +218,7 @@ module.exports=[
       ]
     ],
     "proof": [
-      "I didn’t want to work in the shop ↔ didn’t want the job",
+      "I didn’t want to work in the shop ↔ didn't want",
       "only direct animal work was really helping ↔ thought shop work helped little",
       "shop money paid for food, medicine and emergency treatment ↔ finds it useful"
     ],

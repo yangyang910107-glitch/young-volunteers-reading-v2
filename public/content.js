@@ -13,7 +13,7 @@
   "past problem → knows when others need help",
   "other work comes first → less time to help",
   "hobby skill + helps the organisation",
-  "didn’t want the job + thought it helped little → finds it useful",
+  "didn't want + finds it useful",
   "makes choices + no need to ask",
   "wanted work + too young"
 ],GROUP_KEY_IDS=[
