@@ -12,7 +12,7 @@ function keyComparison(rows,answers=null,markings=[]){
     card.append(question);
     const choices=answers?[{key:answers[a.q],group:null,submitted:true}]:(a.groupKeys||[]);
     const chosen=el('div',undefined,'chosen-key-ideas'+(answers?'':' class-key-ideas'));
-    choices.filter(g=>Number.isInteger(g.key)).forEach(g=>{
+    choices.filter(g=>answers||Number.isInteger(g.key)).forEach(g=>{
       const line=el('p',undefined,'chosen-key-idea');
       line.append(el('small',g.group?'GROUP '+g.group+(g.submitted?'':' · DRAFT'):'OUR KEY IDEA'));
       line.append(el('span',Number.isInteger(g.key)?keyLabel(g.key):'Not answered yet'));
