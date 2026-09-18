@@ -9,7 +9,7 @@ function createGuestPractice({STAGES,CAPS,blankKeys,blankMarks,blank,closeDrafts
       room = guest.practiceRoom = {
         guestPractice:true, owner:guest, source,
         code:source.code, id:source.id, round:source.round, step:source.step,
-        expectedStudents:0, students:new Map([[guest.id,guest]]), observers:new Map(),
+        keysAttempt:source.keysAttempt||0,bridgeAttempt:source.bridgeAttempt||0,expectedStudents:0, students:new Map([[guest.id,guest]]), observers:new Map(),
         groups:CAPS.map((capacity,q)=>({
           id:q+1,q,capacity,markings:blankMarks(),
           drafts:{keys:blankKeys(),combined:blank(),peer:blank()},
@@ -21,6 +21,8 @@ function createGuestPractice({STAGES,CAPS,blankKeys,blankMarks,blank,closeDrafts
       closeDrafts(room, STAGES[room.step]);
       room.step = source.step;
     }
+    if(room.keysAttempt!==(source.keysAttempt||0)){room.keysAttempt=source.keysAttempt||0;room.groups.forEach(g=>{if(g.submissions.keys)g.drafts.keys=structuredClone(g.submissions.keys);delete g.submissions.keys;delete g.closedDrafts?.keys;});}
+    if(room.bridgeAttempt!==(source.bridgeAttempt||0)){room.bridgeAttempt=source.bridgeAttempt||0;room.groups.forEach(g=>{if(g.submissions.combined)g.drafts.combined=structuredClone(g.submissions.combined);delete g.submissions.combined;delete g.submissions.peer;delete g.closedDrafts?.combined;delete g.closedDrafts?.peer;g.drafts.peer=blank();g.feedback=null;g.target=null;});}
     room.revealed = {...source.revealed};
     room.demo = source.demo;
     if (STAGES[room.step] === 'peer') {
