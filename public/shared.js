@@ -31,3 +31,6 @@ function answerTable(rows,keysOnly=false){const wrap=el('div',undefined,'answer-
 socket.on('connect',()=>{$('connection').textContent='● LIVE';});socket.on('disconnect',()=>{$('connection').textContent='○ RECONNECTING';});
 
 function renderPaperExit(container){container.hidden=false;if(container.childElementCount)return;container.append(el('p','WORK ALONE','eyebrow'),el('h2','Complete h + i on your paper.'));const steps=el('ol');['Underline the key words in each question.','Write your answer: A, B, C or D.','Copy the key evidence from the article and underline the matching parts.'].forEach(t=>steps.append(el('li',t)));container.append(steps,el('p','Hand your paper to your teacher when you finish.','paper-hand-in'));}
+
+function guestReadOnly(){return !!session?.observer && !session.practice;}
+const guestClientId=sessionStorage.getItem('guestPracticeClientId')||crypto.randomUUID();sessionStorage.setItem('guestPracticeClientId',guestClientId);
