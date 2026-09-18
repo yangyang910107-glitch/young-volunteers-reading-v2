@@ -35,7 +35,7 @@
     "id": "peer",
     "title": "CHECK & REVISE"
   },
-  {"id":"summary","title":"MATCH EVERY KEY IDEA"},
+  {"id":"summary","title":"RECAPTURE"},
   {
     "id": "exit",
     "title": "EXIT TICKET · TEAM CHALLENGE"

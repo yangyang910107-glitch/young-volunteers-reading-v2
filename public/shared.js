@@ -8,16 +8,16 @@ function stageHeading(s){
   document.body.classList.toggle('lesson-revealed',!!s.revealed);
   document.body.classList.toggle('vocabulary-stage',['vocabMatch','vocabUse'].includes(s.stage));
   const student=!!$('student-demo'),demo=['demo','bridgeDemo'].includes(s.stage);
-  const shortTitles={lead:'CONTRIBUTE',vocabMatch:'WORD MATCH',vocabUse:'WORD USE',gist:'SKIM',demo:'DEMO 0',keys:'KEY IDEAS',bridgeDemo:'BRIDGE DEMO',combined:'TEXT BRIDGE',peer:'CHECK & REVISE',summary:'MATCH EVERY KEY IDEA',response:'YOUR ROLE',exit:'EXIT TICKET',homework:'WRAP UP'};
+  const shortTitles={summary:'RECAPTURE',lead:'CONTRIBUTE',vocabMatch:'WORD MATCH',vocabUse:'WORD USE',gist:'SKIM',demo:'DEMO 0',keys:'KEY IDEAS',bridgeDemo:'BRIDGE DEMO',combined:'TEXT BRIDGE',peer:'CHECK & REVISE',response:'YOUR ROLE',exit:'EXIT TICKET',homework:'WRAP UP'};
   const stages=STAGES.filter(p=>!['demo','bridgeDemo'].includes(p.id));
   const current=s.stage==='demo'?'keys':s.stage==='bridgeDemo'?'combined':s.stage;
   const index=stages.findIndex(p=>p.id===current);
   $('steps').hidden=true;$('steps').replaceChildren();
   if(student){
-    $('activity-title').textContent=(index+1)+'. '+shortTitles[current];
+    $('activity-title').textContent=(index+1)+'. '+(shortTitles[current]||STAGES.find(p=>p.id===current)?.title||'ACTIVITY');
     document.querySelector('.heading .eyebrow').textContent=demo?'TEACHER DEMO · WATCH THE CLASSROOM SCREEN':'DISCUSS TOGETHER · ONE ANSWER PER GROUP';
   }else{
-    $('activity-title').textContent=demo?'EXAMPLE 0 · '+(s.stage==='demo'?'KEY IDEA':'TEXT BRIDGE'):(index+1)+'. '+shortTitles[current];
+    $('activity-title').textContent=demo?'EXAMPLE 0 · '+(s.stage==='demo'?'KEY IDEA':'TEXT BRIDGE'):(index+1)+'. '+(shortTitles[current]||STAGES.find(p=>p.id===current)?.title||'ACTIVITY');
   }
 }
 function sentenceText(id){return SENTENCES.find(s=>s.id===id)?.text||id;}

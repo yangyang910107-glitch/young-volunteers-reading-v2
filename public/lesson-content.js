@@ -243,7 +243,7 @@
     ]
   }
 };delete LESSON.response;delete LESSON.homework;
-LESSON.summary={title:'MATCH EVERY KEY IDEA',kind:'summary',note:'A matching word is a clue, not a complete answer.',questions:[],support:['1. Simplify the question into a Key Idea.','2. Find evidence for EVERY part of the idea.','3. Check the whole meaning, then choose the person.']};
+LESSON.summary={title:'RECAPTURE',kind:'summary',note:'MULTIPLE MATCHING STRATEGY',questions:[],support:['1. Find the KEY IDEAS','2. SCAN for the same meaning','3. BUILD THE TEXT BRIDGE','4. MATCH & PROVE']};
 LESSON.exit.note='Choose a Key Idea, select exact Text Bridge evidence, then choose Who. Submit ONE complete ticket per group.';
 
 r.LESSON=LESSON;if(typeof module!=='undefined')module.exports=LESSON;})(typeof window==='undefined'?globalThis:window);

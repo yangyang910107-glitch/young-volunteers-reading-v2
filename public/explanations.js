@@ -28,8 +28,7 @@ function keyComparison(rows,answers=null,markings=[]){
 }
 function bridgeTable(rows){const table=el('table',undefined,'bridge-comparison'),head=el('thead'),h=el('tr'),body=el('tbody');['WHO?','TEXT EVIDENCE','COMPARE WITH THE KEY IDEA'].forEach(t=>h.append(el('th',t)));head.append(h);table.append(head,body);rows.forEach(a=>{const shown=a.revealed!==false;const tr=el('tr',undefined,shown?(a.correct?'complete-proof':'partial-proof'):'pending-proof');tr.append(el('th',personText(a.who)));const quote=el('td');quote.append(coloredText(a.text,shown?a.hits:[[],[]]));const proof=el('td');(shown?a.proof||[]:[]).forEach((t,i)=>proof.append(proofBox((a.correct?'✓ ':t.startsWith('No proof')?'✗ ':'△ ')+t,i)));if(shown&&a.note)proof.append(proofBox('✗ '+a.note));if(shown)proof.append(el('strong',a.correct?'COMPLETE MATCH':'RELATED DETAILS · INCOMPLETE PROOF','proof-status'));tr.append(quote,proof);body.append(tr);});return table;}
 function explanationRows(a){
-  const r=a.reference,rows=[{correct:true,who:a.answer,text:a.evidence.map(id=>sentenceText(id)).join(' '),hits:r.matches,proof:r.proof}],extra=[...r.distractors];
-  (a.choices||[]).forEach(id=>{if(a.rule.allowed.includes(id)||extra.some(d=>d.id===id))return;extra.push({id,hits:r.matches,note:'This chosen sentence does not supply the complete required evidence. Compare it with all highlighted parts above.'});});
+  const r=a.reference,trapLabels=['b','d','f'],rows=[{correct:true,who:a.answer,text:a.evidence.map(id=>sentenceText(id)).join(' '),hits:r.matches,proof:r.proof}],extra=trapLabels.includes(TASK_LABELS[a.q])?r.distractors.filter(d=>d.hits.some(terms=>terms.length)).slice(0,2):[];
   extra.forEach(d=>{
     const text=sentenceText(d.id),hits=d.hits.map(terms=>terms.filter(term=>text.toLowerCase().includes(term.toLowerCase())));
     rows.push({correct:false,who:d.id[0],text:d.id+' · '+text,hits,proof:hits.map((terms,i)=>terms.length?terms.join(' / ')+' ↔ related to '+r.keyParts[i]:'No proof of '+r.parts[i]),note:d.note});
@@ -42,7 +41,7 @@ answerTable=function(rows,keysOnly=false){
   rows.forEach(a=>{
     const card=el('section',undefined,'bridge-result'),head=el('div',undefined,'bridge-question');
     head.append(el('small','QUESTION '+TASK_LABELS[a.q].toUpperCase()+(state?.stage==='peer'?' · GROUP '+(a.q+1):'')));
-    if(state?.stage==='peer'){const chosen=el('section',undefined,'review-choice');chosen.append(el('strong',a.total&&a.correct===a.total?'✓ COMPLETE MATCH':'LET’S CHECK THIS MATCH'),el('p','Selected Who: '+personText(a.reviewAnswer?.who)),evidenceBlock(a.reviewAnswer?.evidence||[]));card.append(chosen);} 
+    if(state?.stage==='peer'){const chosen=el('section',undefined,'review-choice');chosen.append(el('strong',a.total&&a.correct===a.total?'✓ COMPLETE MATCH':'LET’S CHECK THIS MATCH'),el('p','Selected Who: '+personText(a.reviewAnswer?.who)));card.append(chosen);} 
     head.append(coloredText(QUESTIONS[a.q],a.reference.parts.map(t=>[t])));card.append(head);
     const key=el('div',undefined,'key-idea-pair');
     key.append(el('small','KEY IDEA'),coloredText(keyLabel(a.key,a.q>=6),a.reference.keyParts.map(t=>[t])));
