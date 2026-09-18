@@ -68,3 +68,5 @@ body:not(.teacher) .heading h1{font-size:clamp(30px,3.1vw,44px);font-weight:900;
 .peer-teacher-guide{background:#fff9e7;border:1px solid #dfcc99;border-radius:14px;padding:18px 24px;margin:14px 0}.peer-teacher-guide h2{font-size:21px;margin:0 0 10px}.peer-teacher-guide p{font-size:17px;margin:7px 0}.peer-teacher-guide strong{display:block;margin-top:14px;color:#24543e}
 
 .peer-question-number{font-weight:800;margin-bottom:8px}.peer-who{font-weight:700}.peer-marked-question{margin-top:0}
+
+.peer-full-article{display:block;max-height:60vh;overflow-y:auto;scrollbar-gutter:stable}.peer-article-tabs{margin:14px 0 10px}.peer-full-article .profile{border:0;background:#fffdf8}.peer-article-tabs .person{padding:12px;flex-direction:row;justify-content:space-between}
