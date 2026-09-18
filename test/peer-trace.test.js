@@ -1,0 +1,19 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const {io}=require('socket.io-client'),{createApp}=require('../server');
+const {GROUP_LABELS,QUESTIONS}=require('../public/content'),{WHO_ANSWERS,EVIDENCE}=require('../curriculum');
+test('peer review follows a complete ring and shows only the target group original evidence and underlining; feedback returns to its owner',async t=>{
+ const app=createApp(),clients=[];await new Promise(r=>app.server.listen(0,'127.0.0.1',r));t.after(async()=>{clients.forEach(c=>c.disconnect());await new Promise(r=>app.io.close(r));});
+ const connect=async()=>{const c=io('http://127.0.0.1:'+app.server.address().port,{transports:['websocket'],forceNew:true});clients.push(c);await new Promise(r=>c.once('connect',r));return c;};
+ const send=(c,e,p={})=>new Promise((r,j)=>c.timeout(3000).emit(e,p,(err,x)=>err?j(err):x.ok?r(x):j(Error(x.error))));
+ const teacher=await connect(),j=await send(teacher,'teacher:join',{code:'PEERTRACE'}),auth={code:'PEERTRACE',token:j.token};let state=j.state;
+ const current=()=>({stage:state.stage,round:state.round}),peek=async()=>state=(await send(teacher,'teacher:join',auth)).state,next=async()=>{await send(teacher,'teacher:next',{...auth,...current()});await peek();};
+ const students=[],identities=[];for(let i=0;i<GROUP_LABELS.length;i++){const c=await connect(),identity={code:'PEERTRACE',group:i+1,name:'Team member '+i,clientId:'peertrace-member-'+i};students.push(c);identities.push(identity);await send(c,'student:join',identity);}
+ while(state.stage!=='keys')await next();for(let i=0;i<students.length;i++)await send(students[i],'group:mark',{...current(),q:i,start:0,end:Math.min(12,QUESTIONS[i].length),selected:true});
+ while(state.stage!=='combined')await next();for(let i=0;i<students.length;i++){await send(students[i],'group:draft',{...current(),field:'who',value:WHO_ANSWERS[i]});for(const id of EVIDENCE[i])await send(students[i],'group:draft',{...current(),field:'evidence',value:id});if(i!==1)await send(students[i],'group:submit',current());}
+ await next();assert.equal(state.stage,'peer');const targets=[];for(let i=0;i<students.length;i++){const p=(await send(students[i],'student:join',identities[i])).personal,target=(i+1)%students.length;targets.push(p.target.group);assert.equal(p.target.q,target);assert.deepEqual(p.target.markings,[{start:0,end:Math.min(12,QUESTIONS[target].length)}]);assert.deepEqual(p.target.answer,{who:WHO_ANSWERS[target],evidence:EVIDENCE[target]});assert.equal(p.target.timedOut,target===1);assert.equal(p.target.answer.key,undefined);}
+ assert.deepEqual(targets,students.map((_,i)=>(i+1)%students.length+1));assert.equal(new Set(targets).size,students.length);
+ await send(students.at(-1),'group:feedback',{...current(),status:'revise',note:'Check every required part.'});assert.equal((await send(students[0],'student:join',identities[0])).personal.received.group,students.length);
+ // Revisions do not overwrite the original traces that another team is checking.
+ await send(students[1],'group:draft',{...current(),field:'evidence',value:EVIDENCE[1][0],selected:false});assert.deepEqual((await send(students[0],'student:join',identities[0])).personal.target.answer.evidence,EVIDENCE[1]);
+ const guest=await connect(),guestState=await send(guest,'observer:join',{code:'PEERTRACE',clientId:'peertrace-guest-practice',name:'Guest',group:students.length,practice:true});assert.equal(guestState.personal.target.group,1);assert.deepEqual(guestState.personal.target.markings,[{start:0,end:Math.min(12,QUESTIONS[0].length)}]);assert.equal(guestState.state.joined,students.length);
+});
